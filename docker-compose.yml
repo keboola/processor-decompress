@@ -1,0 +1,23 @@
+version: '2'
+services:
+  dev:
+    build: .
+    image: keboola/processor-decompress
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/code
+
+  processor-decompress:
+    image: keboola/processor-decompress
+    tty: true
+    stdin_open: true
+
+  tests:
+    build: .
+    image: keboola/processor-decompress
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/code
+    command: php /code/tests/run.php
