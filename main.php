@@ -18,7 +18,6 @@ if (!isset($arguments["data"])) {
 }
 
 try {
-
     // GZ
     $finder = new \Symfony\Component\Finder\Finder();
     $finder->name("*.gz")->in($dataFolder . "/in/files")->depth("<= 1");
