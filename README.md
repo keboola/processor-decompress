@@ -56,6 +56,17 @@ results in
 /data/out/files/archive.zip/file2
 ```
 
+### Sample configuration
+
+```
+{
+    "definition": {
+        "component": "keboola.processor-decompres"
+    }
+}
+
+```
+
 ## Development
  
 Clone this repository and init the workspace with following command:
