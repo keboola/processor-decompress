@@ -61,7 +61,7 @@ results in
 ```
 {
     "definition": {
-        "component": "keboola.processor-decompres"
+        "component": "keboola.processor-decompress"
     }
 }
 
