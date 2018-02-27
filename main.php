@@ -7,9 +7,6 @@ set_error_handler(
 );
 require __DIR__ . "/vendor/autoload.php";
 
-use Symfony\Component\Serializer\Encoder\JsonDecode;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-
 $arguments = getopt("", ["data:"]);
 if (!isset($arguments["data"])) {
     $dataFolder = "/data";
