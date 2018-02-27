@@ -6,7 +6,6 @@ Takes all archive files in `/data/in/files` and decompresses them to `/data/out/
 
  - Currently supports ZIP and GZIP compressions.
  - Manifest files are ignored (and not copied).
- - Slices are only supported for GZIP files.
    
 # Usage
 
@@ -32,11 +31,16 @@ Decompressing
 ```
 /data/in/files/sliced-file/part1.csv.gz
 /data/in/files/sliced-file/part2.csv.gz
+/data/in/files/sliced-file/subfolder/part1.csv.gz
+/data/in/files/sliced-file/subfolder/part2.csv.gz
+
 ```
 results in 
 ```
 /data/in/files/sliced-file/part1.csv
 /data/in/files/sliced-file/part2.csv
+/data/in/files/sliced-file/subfolder/part1.csv
+/data/in/files/sliced-file/subfolder/part2.csv
 ```
 
 ## ZIP
@@ -49,11 +53,15 @@ Folder structure in the ZIP archive is ommited.
 The `archive.zip` contains 2 files, `dummyfolder/slice1` and `dummyfolder/slice2`. Decompressing 
 ```
 /data/in/files/archive.zip
+/data/in/files/subfolder/archive.zip
 ```
 results in
 ```
 /data/out/files/archive.zip/file1
 /data/out/files/archive.zip/file2
+/data/out/files/subfolder/archive.zip/file1
+/data/out/files/subfolder/archive.zip/file2
+
 ```
 
 ### Sample configuration
@@ -80,7 +88,7 @@ docker-compose build
 Run the test suite using this command:
 
 ```
-docker-compose run tests
+docker-compose run dev php /code/tests/run.php
 ```
  
 # Integration

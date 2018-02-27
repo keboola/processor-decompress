@@ -19,7 +19,7 @@ foreach ($finder as $testSuite) {
     $runCommand = "php /code/main.php --data=" . $temp->getTmpFolder();
     $runProcess = new \Symfony\Component\Process\Process($runCommand);
     $runProcess->mustRun();
-    
+
     $diffCommand = "diff --exclude=.gitkeep --ignore-all-space --recursive " . $testSuite->getPathname() . "/expected/data/out " . $temp->getTmpFolder() . "/out";
     $diffProcess = new \Symfony\Component\Process\Process($diffCommand);
     $diffProcess->run();
