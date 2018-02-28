@@ -54,7 +54,7 @@ try {
                 }
             }
             (new \Symfony\Component\Process\Process(
-                "unzip {$sourceFile->getPathname()} -d {$dataFolder}/out/files{$subfolder}/{$sourceFile->getBasename()}"
+                "unzip {$sourceFile->getPathname()} -d {$dataFolder}/out/files{$subfolder}"
             ))
                 ->mustRun();
         } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {
