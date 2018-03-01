@@ -11,7 +11,8 @@ Takes all archive files in `/data/in/files` and decompresses them to `/data/out/
 
 ## GZIP
 
-GZIP files are decompressed to a folder with the same name as the original archive.
+GZIP files are decompressed to a folder with the same name as the original archive. 
+The decompressed file will be created with the original name (if stored).
 
 ### Example
 
