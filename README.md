@@ -55,10 +55,10 @@ The `archive.zip` contains 2 files, `dummyfolder/slice1` and `dummyfolder/slice2
 ```
 results in
 ```
-/data/out/files/dummyfolder/slice1
-/data/out/files/dummyfolder/slice2
-/data/out/files/subfolder/dummyfolder/slice1
-/data/out/files/subfolder/dummyfolder/slice2
+/data/out/files/archive.zip/dummyfolder/slice1
+/data/out/files/archive.zip/dummyfolder/slice2
+/data/out/files/subfolder/archive.zip/dummyfolder/slice1
+/data/out/files/subfolder/archive.zip/dummyfolder/slice2
 
 ```
 
