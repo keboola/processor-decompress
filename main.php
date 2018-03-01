@@ -27,12 +27,10 @@ try {
                     $fs->mkdir($dataFolder . "/out/files" . $subfolder);
                 }
             }
+            $fs->mkdir($dataFolder . "/out/files" . $subfolder . "/" . $sourceFile->getBasename());
             (new \Symfony\Component\Process\Process(
-                "gunzip {$sourceFile->getPathname()} --stdout > {$dataFolder}/out/files{$subfolder}/" . substr(
-                    $sourceFile->getBasename(),
-                    0,
-                    -3
-                )
+                "gunzip {$sourceFile->getPathname()} --stdout > {$dataFolder}/out/files{$subfolder}/{$sourceFile->getBasename()}/" .
+                substr($sourceFile->getBasename(), 0, -3)
             ))
                 ->mustRun();
         } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {

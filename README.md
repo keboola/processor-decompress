@@ -11,7 +11,7 @@ Takes all archive files in `/data/in/files` and decompresses them to `/data/out/
 
 ## GZIP
 
-GZIP files are kept where they were originally stored (supporting subfolders).
+GZIP files are decompressed to a folder with the same name as the original archive.
 
 ### Example
 
@@ -23,7 +23,7 @@ Decompressing
 ```
 results in 
 ```
-/data/in/files/archive.csv
+/data/in/files/archive.csv.gz/archive.csv
 ```
 
 #### Slices
@@ -37,10 +37,10 @@ Decompressing
 ```
 results in 
 ```
-/data/in/files/sliced-file/part1.csv
-/data/in/files/sliced-file/part2.csv
-/data/in/files/sliced-file/subfolder/part1.csv
-/data/in/files/sliced-file/subfolder/part2.csv
+/data/in/files/sliced-file/part1.csv.gz/part1.csv
+/data/in/files/sliced-file/part2.csv.gz/part2.csv
+/data/in/files/sliced-file/subfolder/part1.csv.gz/part1.csv
+/data/in/files/sliced-file/subfolder/part2.csv.gz/part2.csv
 ```
 
 ## ZIP
