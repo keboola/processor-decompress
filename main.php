@@ -7,9 +7,6 @@ set_error_handler(
 );
 require __DIR__ . "/vendor/autoload.php";
 
-use Symfony\Component\Serializer\Encoder\JsonDecode;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-
 $arguments = getopt("", ["data:"]);
 if (!isset($arguments["data"])) {
     $dataFolder = "/data";
@@ -20,7 +17,7 @@ if (!isset($arguments["data"])) {
 try {
     // GZ
     $finder = new \Symfony\Component\Finder\Finder();
-    $finder->name("*.gz")->in($dataFolder . "/in/files")->depth("<= 1");
+    $finder->name("*.gz")->in($dataFolder . "/in/files");
     $fs = new \Symfony\Component\Filesystem\Filesystem();
     foreach ($finder as $sourceFile) {
         try {
@@ -47,13 +44,19 @@ try {
 
     // ZIP
     $finder = new \Symfony\Component\Finder\Finder();
-    $finder->name("*.zip")->in($dataFolder . "/in/files")->depth(0);
+    $finder->name("*.zip")->in($dataFolder . "/in/files");
     foreach ($finder as $sourceFile) {
         try {
+            $subfolder = substr($sourceFile->getPath(), strlen($dataFolder . 'in/files/'));
+            if ($subfolder) {
+                if (!$fs->exists($dataFolder . "/out/files" . $subfolder)) {
+                    $fs->mkdir($dataFolder . "/out/files" . $subfolder);
+                }
+            }
             (new \Symfony\Component\Process\Process(
-                "unzip -j {$sourceFile->getPathname()} -d {$dataFolder}/out/files/{$sourceFile->getBasename()}"
-            )
-            )->mustRun();
+                "unzip {$sourceFile->getPathname()} -d {$dataFolder}/out/files{$subfolder}"
+            ))
+                ->mustRun();
         } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {
             throw new \Keboola\Processor\Decompress\Exception(
                 "Failed decompressing file " . $sourceFile->getPathname() . ": " . $e->getMessage()

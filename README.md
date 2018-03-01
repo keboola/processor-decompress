@@ -6,13 +6,12 @@ Takes all archive files in `/data/in/files` and decompresses them to `/data/out/
 
  - Currently supports ZIP and GZIP compressions.
  - Manifest files are ignored (and not copied).
- - Slices are only supported for GZIP files.
    
 # Usage
 
 ## GZIP
 
-GZIP files are kept where they were originally stored (supporting subfolders), only the `.gz` suffix is removed.
+GZIP files are kept where they were originally stored (supporting subfolders).
 
 ### Example
 
@@ -32,28 +31,35 @@ Decompressing
 ```
 /data/in/files/sliced-file/part1.csv.gz
 /data/in/files/sliced-file/part2.csv.gz
+/data/in/files/sliced-file/subfolder/part1.csv.gz
+/data/in/files/sliced-file/subfolder/part2.csv.gz
+
 ```
 results in 
 ```
 /data/in/files/sliced-file/part1.csv
 /data/in/files/sliced-file/part2.csv
+/data/in/files/sliced-file/subfolder/part1.csv
+/data/in/files/sliced-file/subfolder/part2.csv
 ```
 
 ## ZIP
 
-ZIP archive can contain multiple files, so the processor assumes it a sliced table. 
-A folder with the same name (including `.zip` suffix) is created and the archive is decompressed to this folder.
-Folder structure in the ZIP archive is ommited.
+ZIP files are extracted to the folder they're found in and the folder structure within the archive is preserved.
 
 ### Example
 The `archive.zip` contains 2 files, `dummyfolder/slice1` and `dummyfolder/slice2`. Decompressing 
 ```
 /data/in/files/archive.zip
+/data/in/files/subfolder/archive.zip
 ```
 results in
 ```
-/data/out/files/archive.zip/file1
-/data/out/files/archive.zip/file2
+/data/out/files/dummyfolder/slice1
+/data/out/files/dummyfolder/slice2
+/data/out/files/subfolder/dummyfolder/slice1
+/data/out/files/subfolder/dummyfolder/slice2
+
 ```
 
 ### Sample configuration
@@ -80,7 +86,7 @@ docker-compose build
 Run the test suite using this command:
 
 ```
-docker-compose run tests
+docker-compose run dev php /code/tests/run.php
 ```
  
 # Integration
