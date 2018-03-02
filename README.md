@@ -11,7 +11,8 @@ Takes all archive files in `/data/in/files` and decompresses them to `/data/out/
 
 ## GZIP
 
-GZIP files are kept where they were originally stored (supporting subfolders).
+GZIP files are decompressed to a folder with the same name as the original archive. 
+The decompressed file will be created with the original name (if stored).
 
 ### Example
 
@@ -23,7 +24,7 @@ Decompressing
 ```
 results in 
 ```
-/data/in/files/archive.csv
+/data/in/files/archive.csv.gz/archive.csv
 ```
 
 #### Slices
@@ -37,10 +38,10 @@ Decompressing
 ```
 results in 
 ```
-/data/in/files/sliced-file/part1.csv
-/data/in/files/sliced-file/part2.csv
-/data/in/files/sliced-file/subfolder/part1.csv
-/data/in/files/sliced-file/subfolder/part2.csv
+/data/in/files/sliced-file/part1.csv.gz/part1.csv
+/data/in/files/sliced-file/part2.csv.gz/part2.csv
+/data/in/files/sliced-file/subfolder/part1.csv.gz/part1.csv
+/data/in/files/sliced-file/subfolder/part2.csv.gz/part2.csv
 ```
 
 ## ZIP
@@ -55,10 +56,10 @@ The `archive.zip` contains 2 files, `dummyfolder/slice1` and `dummyfolder/slice2
 ```
 results in
 ```
-/data/out/files/dummyfolder/slice1
-/data/out/files/dummyfolder/slice2
-/data/out/files/subfolder/dummyfolder/slice1
-/data/out/files/subfolder/dummyfolder/slice2
+/data/out/files/archive.zip/dummyfolder/slice1
+/data/out/files/archive.zip/dummyfolder/slice2
+/data/out/files/subfolder/archive.zip/dummyfolder/slice1
+/data/out/files/subfolder/archive.zip/dummyfolder/slice2
 
 ```
 
