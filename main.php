@@ -15,19 +15,23 @@ if (!isset($arguments["data"])) {
 }
 
 try {
+    $fs = new \Symfony\Component\Filesystem\Filesystem();
+
     // GZ
     $finder = new \Symfony\Component\Finder\Finder();
-    $finder->name("*.gz")->in($dataFolder . "/in/files");
-    $fs = new \Symfony\Component\Filesystem\Filesystem();
+    $finder->name("*.gz")->in($dataFolder . "/in/files")->files();
     foreach ($finder as $sourceFile) {
         try {
-            $subfolder = substr($sourceFile->getPath(), strlen($dataFolder . 'in/files/'));
+            $subfolder = $sourceFile->getRelativePath();
             if ($subfolder) {
-                if (!$fs->exists($dataFolder . "/out/files" . $subfolder)) {
-                    $fs->mkdir($dataFolder . "/out/files" . $subfolder);
+                if (!$fs->exists($dataFolder . "/out/files/" . $subfolder)) {
+                    $fs->mkdir($dataFolder . "/out/files/" . $subfolder);
                 }
+                $destinationPath = $dataFolder . "/out/files/" . $subfolder . "/" . $sourceFile->getBasename();
+            } else {
+                $destinationPath = $dataFolder . "/out/files/" . $sourceFile->getBasename();
             }
-            $destinationPath = $dataFolder . "/out/files" . $subfolder . "/" . $sourceFile->getBasename();
+
             $fs->mkdir($destinationPath);
             $fs->rename($sourceFile->getPathname(), $destinationPath . "/" . $sourceFile->getBasename());
             (new \Symfony\Component\Process\Process(
@@ -43,17 +47,20 @@ try {
 
     // ZIP
     $finder = new \Symfony\Component\Finder\Finder();
-    $finder->name("*.zip")->in($dataFolder . "/in/files");
+    $finder->name("*.zip")->in($dataFolder . "/in/files")->files();
     foreach ($finder as $sourceFile) {
         try {
-            $subfolder = substr($sourceFile->getPath(), strlen($dataFolder . 'in/files/'));
+            $subfolder = $sourceFile->getRelativePath();
             if ($subfolder) {
-                if (!$fs->exists($dataFolder . "/out/files" . $subfolder)) {
-                    $fs->mkdir($dataFolder . "/out/files" . $subfolder);
+                if (!$fs->exists($dataFolder . "/out/files/" . $subfolder)) {
+                    $fs->mkdir($dataFolder . "/out/files/" . $subfolder);
                 }
+                $destinationPath = $dataFolder . "/out/files/" . $subfolder . "/" . $sourceFile->getBasename();
+            } else {
+                $destinationPath = $dataFolder . "/out/files/" . $sourceFile->getBasename();
             }
             (new \Symfony\Component\Process\Process(
-                "unzip {$sourceFile->getPathname()} -d {$dataFolder}/out/files{$subfolder}/{$sourceFile->getBasename()}"
+                "unzip {$sourceFile->getPathname()} -d {$destinationPath}"
             ))
                 ->mustRun();
         } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {
