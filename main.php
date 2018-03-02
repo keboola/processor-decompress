@@ -22,7 +22,7 @@ if (!isset($arguments["data"])) {
  * @param SplFileInfo $sourceFile
  * @return string
  */
-function getDestinationPath(string $dataFolder, \Symfony\Component\Finder\SplFileInfo $sourceFile)
+function getDestinationPath($dataFolder, \Symfony\Component\Finder\SplFileInfo $sourceFile)
 {
     $fs = new \Symfony\Component\Filesystem\Filesystem();
     if (!$fs->exists($dataFolder . "/out/files/" . $sourceFile->getRelativePathname())) {
