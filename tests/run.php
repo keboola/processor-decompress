@@ -24,6 +24,7 @@ foreach ($finder as $testSuite) {
     $diffProcess = new \Symfony\Component\Process\Process($diffCommand);
     $diffProcess->run();
     if ($diffProcess->getExitCode() > 0) {
+        print "\n" . $runProcess->getOutput() . "\n";
         print "\n" . $diffProcess->getOutput() . "\n";
         exit(1);
     }
