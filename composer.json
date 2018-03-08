@@ -18,9 +18,6 @@
     "autoload": {
         "psr-4": {
             "Keboola\\Processor\\Decompress\\": "src/"
-        },
-        "files": [
-            "src/getDestinationPath.php"
-        ]
+        }
     }
 }
