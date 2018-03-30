@@ -27,6 +27,8 @@ try {
             (new \Symfony\Component\Process\Process(
                 "gunzip {$destinationPath}/{$sourceFile->getBasename()} -N"
             ))
+                ->setTimeout(null)
+                ->setIdleTimeout(null)
                 ->mustRun();
         } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {
             throw new \Keboola\Processor\Decompress\Exception(
@@ -44,6 +46,8 @@ try {
             (new \Symfony\Component\Process\Process(
                 "unzip {$sourceFile->getPathname()} -d {$destinationPath}"
             ))
+                ->setIdleTimeout(null)
+                ->setTimeout(null)
                 ->mustRun();
         } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {
             throw new \Keboola\Processor\Decompress\Exception(
