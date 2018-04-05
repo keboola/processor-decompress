@@ -71,9 +71,7 @@ try {
         foreach ($finder as $sourceFile) {
             \Keboola\Processor\Decompress\decompressZip($dataFolder, $sourceFile);
         }
-
     }
-
 } catch (\Keboola\Processor\Decompress\Exception $e) {
     echo $e->getMessage();
     exit(1);

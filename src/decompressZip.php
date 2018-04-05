@@ -26,5 +26,4 @@ function decompressZip($dataFolder, SplFileInfo $sourceFile)
             "Failed decompressing zip file " . $sourceFile->getPathname() . ": " . $e->getMessage()
         );
     }
-
 }
