@@ -17,6 +17,13 @@ if (!isset($arguments["data"])) {
 try {
     $fs = new \Symfony\Component\Filesystem\Filesystem();
 
+    $finder = new \Symfony\Component\Finder\Finder();
+    $finder->notName("*.gz")->notName("*.zip")->notName("*.manifest")->in($dataFolder . "/in/files")->files();
+    foreach ($finder as $sourceFile) {
+        throw new \Keboola\Processor\Decompress\Exception(
+            "File " . $sourceFile->getPathname() . " is not an archive."
+        );
+    }
     // GZ
     $finder = new \Symfony\Component\Finder\Finder();
     $finder->name("*.gz")->in($dataFolder . "/in/files")->files();
