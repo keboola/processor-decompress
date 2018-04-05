@@ -2,6 +2,7 @@
 
 use Keboola\Temp\Temp;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -9,6 +10,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 $testFolder = __DIR__;
 
 $finder = new Finder();
+$fs = new Symfony\Component\Filesystem\Filesystem();
 $finder->directories()->sortByName()->in($testFolder)->depth(0);
 foreach ($finder as $testSuite) {
     print "Test " . $testSuite->getPathname() . "\n";
@@ -18,15 +20,12 @@ foreach ($finder as $testSuite) {
     $copyCommand = "cp -R " . $testSuite->getPathname() . "/source/data/* " . $temp->getTmpFolder();
     (new Process($copyCommand))->mustRun();
 
-    if (!file_exists($temp->getTmpFolder() . "/in/tables")) {
-        mkdir($temp->getTmpFolder() . "/in/tables", 0777, true);
-    }
-    if (!file_exists($temp->getTmpFolder() . "/in/files")) {
-        mkdir($temp->getTmpFolder() . "/in/files", 0777, true);
-    }
-
-    mkdir($temp->getTmpFolder() . "/out/tables", 0777, true);
-    mkdir($temp->getTmpFolder() . "/out/files", 0777, true);
+    $fs->mkdir([
+        $temp->getTmpFolder() . "/in/tables",
+        $temp->getTmpFolder() . "/in/files",
+        $temp->getTmpFolder() . "/out/tables",
+        $temp->getTmpFolder() . "/out/files"
+    ]);
 
     $runCommand = "php /code/main.php --data=" . $temp->getTmpFolder();
     $runProcess = new Process($runCommand);
