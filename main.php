@@ -41,6 +41,12 @@ try {
             case 'zip':
                 $decompressFunction = '\Keboola\Processor\Decompress\decompressZip';
                 break;
+            default:
+                $decompressFunction = function () use ($parameters) {
+                    throw new \Keboola\Processor\Decompress\Exception(
+                        "Unknown compression type {$parameters["compression_type"]}"
+                    );
+                };
         }
 
         $finder = new \Symfony\Component\Finder\Finder();
