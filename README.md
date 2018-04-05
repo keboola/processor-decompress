@@ -6,7 +6,6 @@ Takes all archive files in `/data/in/files` and decompresses them to `/data/out/
 
  - Currently supports ZIP and GZIP compressions.
  - Manifest files are ignored (and not copied).
- -
 
 # Usage
 
@@ -18,10 +17,39 @@ Processor supports these optional parameters:
 
  - `compression_type` -- Specify compression type `zip` or `gzip`, files can have any name or suffix and are decompressed using the specified method.
 
+## Sample configurations
+
+### Detect compression type automatically
+
+```
+{
+    "definition": {
+        "component": "keboola.processor-decompress"
+    }
+}
+
+```
+
+### Specify compression type
+
+```
+{
+    "definition": {
+        "component": "keboola.processor-decompress"
+    },
+    "parameters": {
+        "compression_type": "zip"
+    }
+}
+
+```
+
+# Decompression details
+
 ## GZIP
 
 GZIP files are decompressed to a folder with the same name as the original archive.
-The decompressed file will be created with the original name (if stored).
+The decompressed file will be created without the `.gz` suffix, if present.
 
 ### Example
 
@@ -69,33 +97,6 @@ results in
 /data/out/files/archive.zip/dummyfolder/slice2
 /data/out/files/subfolder/archive.zip/dummyfolder/slice1
 /data/out/files/subfolder/archive.zip/dummyfolder/slice2
-
-```
-
-### Sample configuration
-
-#### Detect compression type
-
-```
-{
-    "definition": {
-        "component": "keboola.processor-decompress"
-    }
-}
-
-```
-
-#### Specify compression type
-
-```
-{
-    "definition": {
-        "component": "keboola.processor-decompress"
-    },
-    "parameters": {
-        "compression_type": "zip"
-    }
-}
 
 ```
 
