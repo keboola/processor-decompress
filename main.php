@@ -14,54 +14,66 @@ if (!isset($arguments["data"])) {
     $dataFolder = $arguments["data"];
 }
 
+$configFile = $dataFolder . "/config.json";
+if (!file_exists($configFile)) {
+    echo "Config file not found" . "\n";
+    exit(2);
+}
+
 try {
-    $fs = new \Symfony\Component\Filesystem\Filesystem();
+    $jsonDecode = new \Symfony\Component\Serializer\Encoder\JsonDecode(true);
+    $jsonEncode = new \Symfony\Component\Serializer\Encoder\JsonEncode();
+    $config = $jsonDecode->decode(
+        file_get_contents($dataFolder . "/config.json"),
+        \Symfony\Component\Serializer\Encoder\JsonEncoder::FORMAT
+    );
+    $parameters = (new \Symfony\Component\Config\Definition\Processor())->processConfiguration(
+        new \Keboola\Processor\Decompress\ConfigDefinition(),
+        [isset($config["parameters"]) ? $config["parameters"] : []]
+    );
 
-    $finder = new \Symfony\Component\Finder\Finder();
-    $finder->notName("*.gz")->notName("*.zip")->notName("*.manifest")->in($dataFolder . "/in/files")->files();
-    foreach ($finder as $sourceFile) {
-        throw new \Keboola\Processor\Decompress\Exception(
-            "File " . $sourceFile->getPathname() . " is not an archive."
-        );
-    }
-    // GZ
-    $finder = new \Symfony\Component\Finder\Finder();
-    $finder->name("*.gz")->in($dataFolder . "/in/files")->files();
-    foreach ($finder as $sourceFile) {
-        try {
-            $destinationPath = \Keboola\Processor\Decompress\getDestinationPath($dataFolder, $sourceFile);
-            $fs->rename($sourceFile->getPathname(), $destinationPath . "/" . $sourceFile->getBasename());
-            (new \Symfony\Component\Process\Process(
-                "gunzip {$destinationPath}/{$sourceFile->getBasename()} -N"
-            ))
-                ->setTimeout(null)
-                ->setIdleTimeout(null)
-                ->mustRun();
-        } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {
+    if (isset($parameters["compression_type"])) {
+        // force compression type
+        switch ($parameters["compression_type"]) {
+            case 'gzip':
+                $decompressFunction = '\Keboola\Processor\Decompress\decompressGzip';
+                break;
+            case 'zip':
+                $decompressFunction = '\Keboola\Processor\Decompress\decompressZip';
+                break;
+        }
+
+        $finder = new \Symfony\Component\Finder\Finder();
+        $finder->notName("*.manifest")->in($dataFolder . "/in/files")->files();
+        foreach ($finder as $sourceFile) {
+            $decompressFunction($dataFolder, $sourceFile);
+        }
+    } else {
+        // detect compression types by extension
+        $finder = new \Symfony\Component\Finder\Finder();
+        $finder->notName("*.gz")->notName("*.zip")->notName("*.manifest")->in($dataFolder . "/in/files")->files();
+        foreach ($finder as $sourceFile) {
             throw new \Keboola\Processor\Decompress\Exception(
-                "Failed decompressing file " . $sourceFile->getPathname() . ": " . $e->getMessage()
+                "File " . $sourceFile->getPathname() . " is not an archive."
             );
         }
+
+        // GZ
+        $finder = new \Symfony\Component\Finder\Finder();
+        $finder->name("*.gz")->in($dataFolder . "/in/files")->files();
+        foreach ($finder as $sourceFile) {
+            \Keboola\Processor\Decompress\decompressGzip($dataFolder, $sourceFile);
+        }
+
+        // ZIP
+        $finder = new \Symfony\Component\Finder\Finder();
+        $finder->name("*.zip")->in($dataFolder . "/in/files")->files();
+        foreach ($finder as $sourceFile) {
+            \Keboola\Processor\Decompress\decompressZip($dataFolder, $sourceFile);
+        }
+
     }
 
-    // ZIP
-    $finder = new \Symfony\Component\Finder\Finder();
-    $finder->name("*.zip")->in($dataFolder . "/in/files")->files();
-    foreach ($finder as $sourceFile) {
-        try {
-            $destinationPath = \Keboola\Processor\Decompress\getDestinationPath($dataFolder, $sourceFile);
-            (new \Symfony\Component\Process\Process(
-                "unzip {$sourceFile->getPathname()} -d {$destinationPath}"
-            ))
-                ->setIdleTimeout(null)
-                ->setTimeout(null)
-                ->mustRun();
-        } catch (\Symfony\Component\Process\Exception\ProcessFailedException $e) {
-            throw new \Keboola\Processor\Decompress\Exception(
-                "Failed decompressing file " . $sourceFile->getPathname() . ": " . $e->getMessage()
-            );
-        }
-    }
 } catch (\Keboola\Processor\Decompress\Exception $e) {
     echo $e->getMessage();
     exit(1);
