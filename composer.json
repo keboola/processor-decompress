@@ -20,7 +20,9 @@
             "Keboola\\Processor\\Decompress\\": "src/"
         },
         "files": [
-            "src/getDestinationPath.php"
+            "src/getDestinationPath.php",
+            "src/decompressZip.php",
+            "src/decompressGzip.php"
         ]
     }
 }
