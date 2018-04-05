@@ -14,7 +14,7 @@ $fs = new Symfony\Component\Filesystem\Filesystem();
 $finder->directories()->sortByName()->in($testFolder)->depth(0);
 foreach ($finder as $testSuite) {
     print "Test " . $testSuite->getPathname() . "\n";
-    $temp = new Temp("my-component");
+    $temp = new Temp("processor-decompress");
     $temp->initRunFolder();
 
     $copyCommand = "cp -R " . $testSuite->getPathname() . "/source/data/* " . $temp->getTmpFolder();
