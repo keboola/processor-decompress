@@ -2,6 +2,9 @@
 
 namespace Keboola\Processor\Decompress;
 
+use Keboola\Processor\Decompress\Decompressor\DecompressorGzip;
+use Keboola\Processor\Decompress\Decompressor\DecompressorZip;
+
 class Component extends \Keboola\Component\BaseComponent
 {
 
@@ -22,48 +25,41 @@ class Component extends \Keboola\Component\BaseComponent
 
         if ($config->getCompressionType() !== 'auto') {
             // force compression type
-            switch ($config->getCompressionType()) {
-                case 'gzip':
-                    $decompressFunction = '\Keboola\Processor\Decompress\decompressGzip';
-                    break;
-                case 'zip':
-                    $decompressFunction = '\Keboola\Processor\Decompress\decompressZip';
-                    break;
-                default:
-                    $decompressFunction = function () use ($config) {
-                        throw new \Keboola\Processor\Decompress\Exception(
-                            "Unknown compression type {$config->getCompressionType()}"
-                        );
-                    };
+            if ($config->getCompressionType() == 'gzip') {
+                $decompressor = new DecompressorGzip($this->getDataDir() . '/out/files');
+            } else {
+                $decompressor = new DecompressorZip($this->getDataDir() . '/out/files');
             }
 
             $finder = new \Symfony\Component\Finder\Finder();
-            $finder->notName("*.manifest")->in($this->getDataDir() . "/in/files")->files();
+            $finder->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
-                $decompressFunction($this->getDataDir(), $sourceFile);
+                $decompressor->decompress($sourceFile);
             }
         } else {
             // detect compression types by extension
             $finder = new \Symfony\Component\Finder\Finder();
-            $finder->notName("*.gz")->notName("*.zip")->notName("*.manifest")->in($this->getDataDir() . "/in/files")->files();
+            $finder->notName('*.gz')->notName('*.zip')->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
                 throw new \Keboola\Processor\Decompress\Exception(
-                    "File " . $sourceFile->getPathname() . " is not an archive."
+                    'File ' . $sourceFile->getPathname() . ' is not an archive.'
                 );
             }
 
             // GZ
             $finder = new \Symfony\Component\Finder\Finder();
-            $finder->name("*.gz")->in($this->getDataDir() . "/in/files")->files();
+            $finder->name('*.gz')->in($this->getDataDir() . '/in/files')->files();
+            $gzipDecompressor = new DecompressorGzip($this->getDataDir() . '/out/files');
             foreach ($finder as $sourceFile) {
-                \Keboola\Processor\Decompress\decompressGzip($this->getDataDir(), $sourceFile);
+                $gzipDecompressor->decompress($sourceFile);
             }
 
             // ZIP
             $finder = new \Symfony\Component\Finder\Finder();
-            $finder->name("*.zip")->in($this->getDataDir() . "/in/files")->files();
+            $finder->name('*.zip')->in($this->getDataDir() . '/in/files')->files();
+            $zipDecompressor = new DecompressorZip($this->getDataDir() . '/out/files');
             foreach ($finder as $sourceFile) {
-                \Keboola\Processor\Decompress\decompressZip($this->getDataDir(), $sourceFile);
+                $zipDecompressor->decompress($sourceFile);
             }
         }
     }
