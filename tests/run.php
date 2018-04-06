@@ -1,9 +1,8 @@
 <?php
 
-use Keboola\Temp\Temp;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use Keboola\Temp\Temp;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
@@ -27,7 +26,7 @@ foreach ($finder as $testSuite) {
         $temp->getTmpFolder() . "/out/files"
     ]);
 
-    $runCommand = "php /code/main.php --data=" . $temp->getTmpFolder();
+    $runCommand = "export KBC_DATADIR={$temp->getTmpFolder()} && php /code/src/run.php";
     $runProcess = new Process($runCommand);
     $runProcess->run();
     if (($runProcess->getExitCode() > 0) && !file_exists($testSuite->getPathname() . "/expected")) {

@@ -7,11 +7,11 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 /**
- * @param $dataFolder
+ * @param string $dataFolder
  * @param SplFileInfo $sourceFile
  * @throws Exception
  */
-function decompressZip($dataFolder, SplFileInfo $sourceFile)
+function decompressZip($dataFolder, SplFileInfo $sourceFile): void
 {
     try {
         $destinationPath = getDestinationPath($dataFolder, $sourceFile);

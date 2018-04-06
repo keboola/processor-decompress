@@ -1,24 +1,24 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Keboola\Processor\Decompress;
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
-class ConfigDefinition implements ConfigurationInterface
+class ConfigDefinition extends \Keboola\Component\Config\BaseConfigDefinition
 {
-    public function getConfigTreeBuilder()
+    protected function getParametersDefinition(): ArrayNodeDefinition
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root("parameters");
-
-        $rootNode
+        $parametersNode = parent::getParametersDefinition();
+        // @formatter:off
+        $parametersNode
             ->children()
                 ->enumNode('compression_type')
-                    ->values(['zip', 'gzip'])
+                    ->values(['auto', 'zip', 'gzip'])
+                    ->defaultValue('auto')
                 ->end()
             ->end()
         ;
-        return $treeBuilder;
+        // @formatter:on
+        return $parametersNode;
     }
 }

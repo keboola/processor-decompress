@@ -8,11 +8,11 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 /**
- * @param $dataFolder
+ * @param string $dataFolder
  * @param SplFileInfo $sourceFile
  * @throws Exception
  */
-function decompressGzip($dataFolder, SplFileInfo $sourceFile)
+function decompressGzip($dataFolder, SplFileInfo $sourceFile): void
 {
     try {
         $fs = new Filesystem();

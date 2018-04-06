@@ -1,6 +1,8 @@
 <?php
 namespace Keboola\Processor\Decompress;
 
-class Exception extends \Exception
+use Keboola\Component\UserException;
+
+class Exception extends UserException
 {
 }

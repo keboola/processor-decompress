@@ -2,6 +2,8 @@
 
 namespace Keboola\Processor\Decompress;
 
+use Symfony\Component\Finder\SplFileInfo;
+
 /**
  *
  * Creates destination folder in `out/files` and keeps the subfolder structure.
@@ -10,7 +12,7 @@ namespace Keboola\Processor\Decompress;
  * @param SplFileInfo $sourceFile
  * @return string
  */
-function getDestinationPath($dataFolder, \Symfony\Component\Finder\SplFileInfo $sourceFile)
+function getDestinationPath($dataFolder, SplFileInfo $sourceFile)
 {
     $fs = new \Symfony\Component\Filesystem\Filesystem();
     if (!$fs->exists($dataFolder . "/out/files/" . $sourceFile->getRelativePathname())) {
