@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Keboola\Processor\Decompress\Decompressor;
 
@@ -9,10 +11,6 @@ use Symfony\Component\Process\Process;
 
 class DecompressorZip extends BaseDecompressor implements DecompressorInterface
 {
-    /**
-     * @param SplFileInfo $sourceFile
-     * @throws Exception
-     */
     public function decompress(SplFileInfo $sourceFile): void
     {
         try {

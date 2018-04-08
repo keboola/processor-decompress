@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Keboola\Processor\Decompress\Decompressor;
 
@@ -14,12 +16,12 @@ class BaseDecompressor
      */
     protected $destinationFolder;
 
-    public function __construct($destinationFolder)
+    public function __construct(string $destinationFolder)
     {
         $this->destinationFolder = $destinationFolder;
     }
 
-    public function getDestinationPath(SplFileInfo $sourceFile)
+    public function getDestinationPath(SplFileInfo $sourceFile) : string
     {
         $fs = new Filesystem();
         if (!$fs->exists($this->destinationFolder . '/' . $sourceFile->getRelativePathname())) {

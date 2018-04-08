@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Keboola\Temp\Temp;
@@ -23,7 +25,7 @@ foreach ($finder as $testSuite) {
         $temp->getTmpFolder() . "/in/tables",
         $temp->getTmpFolder() . "/in/files",
         $temp->getTmpFolder() . "/out/tables",
-        $temp->getTmpFolder() . "/out/files"
+        $temp->getTmpFolder() . "/out/files",
     ]);
 
     $runCommand = "export KBC_DATADIR={$temp->getTmpFolder()} && php /code/src/run.php";
