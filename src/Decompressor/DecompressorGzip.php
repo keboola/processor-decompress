@@ -14,13 +14,7 @@ class DecompressorGzip extends BaseDecompressor implements DecompressorInterface
     public function decompress(SplFileInfo $sourceFile): void
     {
         try {
-            $baseName = $sourceFile->getBasename();
-
-            // strip .gz suffix if present
-            if (substr($baseName, -3) === '.gz') {
-                $baseName = substr($baseName, 0, -3);
-            }
-
+            $baseName = $sourceFile->getBasename('.gz');
             $destinationPath = $this->getDestinationPath($sourceFile);
             (new Process(
                 "gunzip -c {$sourceFile->getPathname()} > {$destinationPath}/{$baseName}"
