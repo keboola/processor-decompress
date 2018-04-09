@@ -24,9 +24,7 @@ class BaseDecompressor
     public function getDestinationPath(SplFileInfo $sourceFile) : string
     {
         $fs = new Filesystem();
-        if (!$fs->exists($this->destinationFolder . '/' . $sourceFile->getRelativePathname())) {
-            $fs->mkdir($this->destinationFolder . '/' . $sourceFile->getRelativePathname());
-        }
+        $fs->mkdir($this->destinationFolder . '/' . $sourceFile->getRelativePathname());
         return $this->destinationFolder . '/' . $sourceFile->getRelativePathname();
     }
 }
