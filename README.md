@@ -114,7 +114,7 @@ docker-compose build
 Run the test suite using this command:
 
 ```
-docker-compose run dev php /code/tests/run.php
+docker-compose run dev composer ci
 ```
 
 # Integration
