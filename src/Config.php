@@ -8,6 +8,6 @@ class Config extends \Keboola\Component\Config\BaseConfig
 {
     public function getCompressionType(): string
     {
-        return $this->getValue(['parameters', 'compression_type'], 'auto');
+        return $this->getValue(['parameters', 'compression_type']);
     }
 }
