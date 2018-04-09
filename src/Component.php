@@ -6,6 +6,7 @@ namespace Keboola\Processor\Decompress;
 
 use Keboola\Processor\Decompress\Decompressor\DecompressorGzip;
 use Keboola\Processor\Decompress\Decompressor\DecompressorZip;
+use Symfony\Component\Finder\Finder;
 
 class Component extends \Keboola\Component\BaseComponent
 {
@@ -33,23 +34,23 @@ class Component extends \Keboola\Component\BaseComponent
                 $decompressor = new DecompressorZip($this->getDataDir() . '/out/files');
             }
 
-            $finder = new \Symfony\Component\Finder\Finder();
+            $finder = new Finder();
             $finder->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
                 $decompressor->decompress($sourceFile);
             }
         } else {
             // detect compression types by extension
-            $finder = new \Symfony\Component\Finder\Finder();
+            $finder = new Finder();
             $finder->notName('*.gz')->notName('*.zip')->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
-                throw new \Keboola\Processor\Decompress\Exception(
+                throw new Exception(
                     'File ' . $sourceFile->getPathname() . ' is not an archive.'
                 );
             }
 
             // GZ
-            $finder = new \Symfony\Component\Finder\Finder();
+            $finder = new Finder();
             $finder->name('*.gz')->in($this->getDataDir() . '/in/files')->files();
             $gzipDecompressor = new DecompressorGzip($this->getDataDir() . '/out/files');
             foreach ($finder as $sourceFile) {
@@ -57,7 +58,7 @@ class Component extends \Keboola\Component\BaseComponent
             }
 
             // ZIP
-            $finder = new \Symfony\Component\Finder\Finder();
+            $finder = new Finder();
             $finder->name('*.zip')->in($this->getDataDir() . '/in/files')->files();
             $zipDecompressor = new DecompressorZip($this->getDataDir() . '/out/files');
             foreach ($finder as $sourceFile) {
