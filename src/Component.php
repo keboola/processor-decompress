@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keboola\Processor\Decompress;
 
+use Keboola\Component\UserException;
 use Keboola\Processor\Decompress\Decompressor\DecompressorGzip;
 use Keboola\Processor\Decompress\Decompressor\DecompressorZip;
 use Symfony\Component\Finder\Finder;
@@ -44,7 +45,7 @@ class Component extends \Keboola\Component\BaseComponent
             $finder = new Finder();
             $finder->notName('*.gz')->notName('*.zip')->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
-                throw new Exception(
+                throw new UserException(
                     'File ' . $sourceFile->getPathname() . ' is not an archive.'
                 );
             }

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Keboola\Processor\Decompress\Decompressor;
 
-use Keboola\Processor\Decompress\Exception;
+use Keboola\Component\UserException;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class DecompressorGzip extends BaseDecompressor implements DecompressorInterface
 {
+    /**
+     * @param SplFileInfo $sourceFile
+     * @throws UserException
+     */
     public function decompress(SplFileInfo $sourceFile): void
     {
         try {
@@ -29,7 +33,7 @@ class DecompressorGzip extends BaseDecompressor implements DecompressorInterface
                 ->setIdleTimeout(null)
                 ->mustRun();
         } catch (ProcessFailedException $e) {
-            throw new Exception(
+            throw new UserException(
                 'Failed decompressing gzip file ' . $sourceFile->getPathname() . ': ' . $e->getMessage()
             );
         }
