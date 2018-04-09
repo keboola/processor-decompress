@@ -11,10 +11,6 @@ use Symfony\Component\Process\Process;
 
 class DecompressorGzip extends BaseDecompressor implements DecompressorInterface
 {
-    /**
-     * @param SplFileInfo $sourceFile
-     * @throws UserException
-     */
     public function decompress(SplFileInfo $sourceFile): void
     {
         try {
