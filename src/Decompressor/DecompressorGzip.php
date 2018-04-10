@@ -17,7 +17,7 @@ class DecompressorGzip extends BaseDecompressor implements DecompressorInterface
             $baseName = $sourceFile->getBasename('.gz');
             $destinationPath = $this->getDestinationPath($sourceFile);
             (new Process(
-                "gunzip -c {$sourceFile->getPathname()} > {$destinationPath}/{$baseName}"
+                'gunzip -c ' . escapeshellarg($sourceFile->getPathname()) .' > ' . escapeshellarg($destinationPath . '/' . $baseName)
             ))
                 ->setTimeout(null)
                 ->setIdleTimeout(null)
