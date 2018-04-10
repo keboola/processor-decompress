@@ -9,13 +9,13 @@ Takes all archive files in `/data/in/files` and decompresses them to `/data/out/
 
 # Usage
 
-Compression type is detected from file suffix (`.zip` or `.gz`) or can be forced by using optional `compression_type` parameter.
+Compression type is detected from file suffix (`.zip`, `.gz` or `.snappy`) or can be forced by using optional `compression_type` parameter.
 
 ## Parameters
 
 Processor supports these optional parameters:
 
- - `compression_type` -- Specify compression type `zip` or `gzip`, files can have any name or suffix and are decompressed using the specified method.
+ - `compression_type` -- Specify compression type `zip`, `gzip` or `snappy`, files can have any name or suffix and are decompressed using the specified method.
 
 ## Sample configurations
 
@@ -83,7 +83,7 @@ results in
 
 ## ZIP
 
-ZIP files are extracted to the folder they're found in and the folder structure within the archive is preserved.
+ZIP files are extracted to a subfolder carrying the archive name and the folder structure within the archive is preserved.
 
 ### Example
 The `archive.zip` contains 2 files, `dummyfolder/slice1` and `dummyfolder/slice2`. Decompressing
@@ -100,6 +100,42 @@ results in
 
 ```
 
+## Snappy
+
+Snappy files are decompressed to a folder with the same name as the original archive.
+The decompressed file will be created without the `.snappy` suffix, if present.
+
+Snappy decompressor uses ![python-snappy](https://github.com/andrix/python-snappy) library.
+
+### Example
+
+#### Single file
+
+Decompressing
+```
+/data/in/files/archive.csv.snappy
+```
+results in
+```
+/data/in/files/archive.csv.snappy/archive.csv
+```
+
+#### Slices
+Decompressing
+```
+/data/in/files/sliced-file/part1.csv.snappy
+/data/in/files/sliced-file/part2.csv.snappy
+/data/in/files/sliced-file/subfolder/part1.csv.snappy
+/data/in/files/sliced-file/subfolder/part2.csv.snappy
+
+```
+results in
+```
+/data/in/files/sliced-file/part1.csv.snappy/part1.csv
+/data/in/files/sliced-file/part2.csv.snappy/part2.csv
+/data/in/files/sliced-file/subfolder/part1.csv.snappy/part1.csv
+/data/in/files/sliced-file/subfolder/part2.csv.snappy/part2.csv
+```
 
 # Development
 
