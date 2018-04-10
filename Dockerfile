@@ -13,10 +13,16 @@ COPY docker/composer-install.sh /tmp/composer-install.sh
 RUN apt-get update && apt-get install -y --no-install-recommends \
         zlib1g-dev \
         unzip \
+        python3 \
+        python3-pip \
+        python3-dev \
+        libsnappy-dev \
 	&& rm -r /var/lib/apt/lists/* \
 	&& docker-php-ext-install -j$(nproc) zip \
 	&& chmod +x /tmp/composer-install.sh \
 	&& /tmp/composer-install.sh
+
+RUN pip3 install setuptools && pip3 install python-snappy
 
 ## Composer - deps always cached unless changed
 # First copy only composer files
