@@ -15,7 +15,7 @@ class ConfigDefinition extends \Keboola\Component\Config\BaseConfigDefinition
         $parametersNode
             ->children()
                 ->enumNode('compression_type')
-                    ->values(['auto', 'zip', 'gzip'])
+                    ->values(['auto', 'zip', 'gzip', 'snappy'])
                     ->defaultValue('auto')
                 ->end()
             ->end()
