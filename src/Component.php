@@ -6,6 +6,7 @@ namespace Keboola\Processor\Decompress;
 
 use Keboola\Component\UserException;
 use Keboola\Processor\Decompress\Decompressor\DecompressorGzip;
+use Keboola\Processor\Decompress\Decompressor\DecompressorSnappy;
 use Keboola\Processor\Decompress\Decompressor\DecompressorZip;
 use Symfony\Component\Finder\Finder;
 
@@ -31,6 +32,8 @@ class Component extends \Keboola\Component\BaseComponent
             // force compression type
             if ($config->getCompressionType() == 'gzip') {
                 $decompressor = new DecompressorGzip($this->getDataDir() . '/out/files');
+            } elseif ($config->getCompressionType() == 'snappy') {
+                $decompressor = new DecompressorSnappy($this->getDataDir() . '/out/files');
             } else {
                 $decompressor = new DecompressorZip($this->getDataDir() . '/out/files');
             }
@@ -43,7 +46,7 @@ class Component extends \Keboola\Component\BaseComponent
         } else {
             // detect compression types by extension
             $finder = new Finder();
-            $finder->notName('*.gz')->notName('*.zip')->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
+            $finder->notName('*.gz')->notName('*.zip')->notName('*.snappy')->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
                 throw new UserException(
                     'File ' . $sourceFile->getPathname() . ' is not an archive.'
@@ -62,6 +65,14 @@ class Component extends \Keboola\Component\BaseComponent
             $finder = new Finder();
             $finder->name('*.zip')->in($this->getDataDir() . '/in/files')->files();
             $zipDecompressor = new DecompressorZip($this->getDataDir() . '/out/files');
+            foreach ($finder as $sourceFile) {
+                $zipDecompressor->decompress($sourceFile);
+            }
+
+            // Snappy
+            $finder = new Finder();
+            $finder->name('*.snappy')->in($this->getDataDir() . '/in/files')->files();
+            $zipDecompressor = new DecompressorSnappy($this->getDataDir() . '/out/files');
             foreach ($finder as $sourceFile) {
                 $zipDecompressor->decompress($sourceFile);
             }
