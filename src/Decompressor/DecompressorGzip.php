@@ -16,10 +16,12 @@ class DecompressorGzip extends BaseDecompressor implements DecompressorInterface
         try {
             $baseName = $sourceFile->getBasename('.gz');
             $destinationPath = $this->getDestinationPath($sourceFile);
-            (new Process(
-                'gunzip -c ' . escapeshellarg($sourceFile->getPathname()) .' > ' . escapeshellarg($destinationPath . '/' . $baseName)
-            ))
-                ->setTimeout(null)
+            $process = Process::fromShellCommandline(
+                'gunzip -c ' .
+                escapeshellarg($sourceFile->getPathname()) .' > ' .
+                escapeshellarg($destinationPath . '/' . $baseName)
+            );
+            $process->setTimeout(null)
                 ->setIdleTimeout(null)
                 ->mustRun();
         } catch (ProcessFailedException $e) {

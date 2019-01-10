@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Keboola\Processor\Decompress\Decompressor;
 
-use Keboola\Processor\Decompress\Exception;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class BaseDecompressor
 {
@@ -21,7 +19,7 @@ class BaseDecompressor
         $this->destinationFolder = $destinationFolder;
     }
 
-    public function getDestinationPath(SplFileInfo $sourceFile) : string
+    public function getDestinationPath(SplFileInfo $sourceFile): string
     {
         $fs = new Filesystem();
         $fs->mkdir($this->destinationFolder . '/' . $sourceFile->getRelativePathname());

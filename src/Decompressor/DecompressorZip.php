@@ -15,10 +15,8 @@ class DecompressorZip extends BaseDecompressor implements DecompressorInterface
     {
         try {
             $destinationPath = $this->getDestinationPath($sourceFile);
-            (new Process(
-                'unzip ' . escapeshellarg($sourceFile->getPathname())  . ' -d ' . escapeshellarg($destinationPath)
-            ))
-                ->setIdleTimeout(null)
+            $process = new Process(['unzip', $sourceFile->getPathname(), '-d', $destinationPath]);
+            $process->setIdleTimeout(null)
                 ->setTimeout(null)
                 ->mustRun();
         } catch (ProcessFailedException $e) {

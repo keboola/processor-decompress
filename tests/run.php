@@ -19,7 +19,7 @@ foreach ($finder as $testSuite) {
     $temp->initRunFolder();
 
     $copyCommand = "cp -R " . $testSuite->getPathname() . "/source/data/* " . $temp->getTmpFolder();
-    (new Process($copyCommand))->mustRun();
+    Process::fromShellCommandline($copyCommand)->mustRun();
 
     $fs->mkdir([
         $temp->getTmpFolder() . "/in/tables",
@@ -29,10 +29,10 @@ foreach ($finder as $testSuite) {
     ]);
 
     $runCommand = "export KBC_DATADIR={$temp->getTmpFolder()} && php /code/src/run.php";
-    $runProcess = new Process($runCommand);
+    $runProcess = Process::fromShellCommandline($runCommand);
     $runProcess->run();
     if (($runProcess->getExitCode() > 0) && !file_exists($testSuite->getPathname() . "/expected")) {
-        if ($runProcess->getExitCode() == 1) {
+        if ($runProcess->getExitCode() === 1) {
             print "Failed as expected ({$runProcess->getExitCode()}): {$runProcess->getOutput()} \n";
         } else {
             print "Failed unexpectedly {$runProcess->getExitCode()}\n";
@@ -47,7 +47,7 @@ foreach ($finder as $testSuite) {
     } else {
         $diffCommand = "diff --exclude=.gitkeep --ignore-all-space --recursive " .
             $testSuite->getPathname() . "/expected/data/out " . $temp->getTmpFolder() . "/out";
-        $diffProcess = new Process($diffCommand);
+        $diffProcess = Process::fromShellCommandline($diffCommand);
         $diffProcess->run();
         if ($diffProcess->getExitCode() > 0) {
             print "\n" . $diffProcess->getOutput() . "\n";
