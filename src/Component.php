@@ -30,9 +30,9 @@ class Component extends \Keboola\Component\BaseComponent
 
         if ($config->getCompressionType() !== 'auto') {
             // force compression type
-            if ($config->getCompressionType() == 'gzip') {
+            if ($config->getCompressionType() === 'gzip') {
                 $decompressor = new DecompressorGzip($this->getDataDir() . '/out/files');
-            } elseif ($config->getCompressionType() == 'snappy') {
+            } elseif ($config->getCompressionType() === 'snappy') {
                 $decompressor = new DecompressorSnappy($this->getDataDir() . '/out/files');
             } else {
                 $decompressor = new DecompressorZip($this->getDataDir() . '/out/files');
@@ -46,7 +46,11 @@ class Component extends \Keboola\Component\BaseComponent
         } else {
             // detect compression types by extension
             $finder = new Finder();
-            $finder->notName('*.gz')->notName('*.zip')->notName('*.snappy')->notName('*.manifest')->in($this->getDataDir() . '/in/files')->files();
+            $finder->notName('*.gz')
+                ->notName('*.zip')
+                ->notName('*.snappy')
+                ->notName('*.manifest')
+                ->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
                 throw new UserException(
                     'File ' . $sourceFile->getPathname() . ' is not an archive.'

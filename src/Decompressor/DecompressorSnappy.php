@@ -16,10 +16,15 @@ class DecompressorSnappy extends BaseDecompressor implements DecompressorInterfa
         try {
             $baseName = $sourceFile->getBasename('.snappy');
             $destinationPath = $this->getDestinationPath($sourceFile);
-            (new Process(
-                'python3 -m snappy -d ' . escapeshellarg($sourceFile->getPathname()) . ' ' . escapeshellarg($destinationPath . '/'  .$baseName)
-            ))
-                ->setTimeout(null)
+            $process = new Process([
+                'python3',
+                '-m',
+                'snappy',
+                '-d',
+                $sourceFile->getPathname(),
+                $destinationPath . '/' . $baseName,
+            ]);
+            $process->setTimeout(null)
                 ->setIdleTimeout(null)
                 ->mustRun();
         } catch (ProcessFailedException $e) {

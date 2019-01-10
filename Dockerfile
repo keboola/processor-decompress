@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-pip \
         python3-dev \
         libsnappy-dev \
+        libzip-dev \
         git \
 	&& rm -r /var/lib/apt/lists/* \
 	&& docker-php-ext-install -j$(nproc) zip \
