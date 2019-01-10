@@ -44,6 +44,23 @@ Processor supports these optional parameters:
 
 ```
 
+### Graceful decompression
+
+With default setting (`"graceful": false`), when the processor encounters a file that cannot be decompressed, it will fail. In 
+graceful mode, the failing file will be skipped and reported in events. Graceful mode is set with the `"graceful": true` parameter.
+  
+```
+{
+    "definition": {
+        "component": "keboola.processor-decompress"
+    },
+    "parameters": {
+        "graceful": true
+    }
+}
+
+```
+
 # Decompression details
 
 ## GZIP

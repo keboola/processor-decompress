@@ -25,9 +25,13 @@ class DecompressorGzip extends BaseDecompressor implements DecompressorInterface
                 ->setIdleTimeout(null)
                 ->mustRun();
         } catch (ProcessFailedException $e) {
-            throw new UserException(
-                'Failed decompressing gzip file ' . $sourceFile->getPathname() . ': ' . $e->getMessage()
-            );
+            if ($this->isGraceful) {
+                $this->logger->error($e->getMessage());
+            } else {
+                throw new UserException(
+                    'Failed decompressing gzip file ' . $sourceFile->getPathname() . ': ' . $e->getMessage()
+                );
+            }
         }
     }
 }

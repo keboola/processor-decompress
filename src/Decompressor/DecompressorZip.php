@@ -20,9 +20,13 @@ class DecompressorZip extends BaseDecompressor implements DecompressorInterface
                 ->setTimeout(null)
                 ->mustRun();
         } catch (ProcessFailedException $e) {
-            throw new UserException(
-                'Failed decompressing zip file ' . $sourceFile->getPathname() . ': ' . $e->getMessage()
-            );
+            if ($this->isGraceful) {
+                $this->logger->error($e->getMessage());
+            } else {
+                throw new UserException(
+                    'Failed decompressing zip file ' . $sourceFile->getPathname() . ': ' . $e->getMessage()
+                );
+            }
         }
     }
 }
