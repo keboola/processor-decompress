@@ -28,9 +28,13 @@ class DecompressorSnappy extends BaseDecompressor implements DecompressorInterfa
                 ->setIdleTimeout(null)
                 ->mustRun();
         } catch (ProcessFailedException $e) {
-            throw new UserException(
-                'Failed decompressing snappy file ' . $sourceFile->getPathname() . ': ' . $e->getMessage()
-            );
+            if ($this->isGraceful) {
+                $this->logger->error($e->getMessage());
+            } else {
+                throw new UserException(
+                    'Failed decompressing snappy file ' . $sourceFile->getPathname() . ': ' . $e->getMessage()
+                );
+            }
         }
     }
 }

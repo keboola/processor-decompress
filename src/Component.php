@@ -8,6 +8,7 @@ use Keboola\Component\UserException;
 use Keboola\Processor\Decompress\Decompressor\DecompressorGzip;
 use Keboola\Processor\Decompress\Decompressor\DecompressorSnappy;
 use Keboola\Processor\Decompress\Decompressor\DecompressorZip;
+use Keboola\Processor\Decompress\Exception\DecompressException;
 use Symfony\Component\Finder\Finder;
 
 class Component extends \Keboola\Component\BaseComponent
@@ -31,11 +32,23 @@ class Component extends \Keboola\Component\BaseComponent
         if ($config->getCompressionType() !== 'auto') {
             // force compression type
             if ($config->getCompressionType() === 'gzip') {
-                $decompressor = new DecompressorGzip($this->getDataDir() . '/out/files');
+                $decompressor = new DecompressorGzip(
+                    $this->getDataDir() . '/out/files',
+                    $this->getLogger(),
+                    $config->isGraceful()
+                );
             } elseif ($config->getCompressionType() === 'snappy') {
-                $decompressor = new DecompressorSnappy($this->getDataDir() . '/out/files');
+                $decompressor = new DecompressorSnappy(
+                    $this->getDataDir() . '/out/files',
+                    $this->getLogger(),
+                    $config->isGraceful()
+                );
             } else {
-                $decompressor = new DecompressorZip($this->getDataDir() . '/out/files');
+                $decompressor = new DecompressorZip(
+                    $this->getDataDir() . '/out/files',
+                    $this->getLogger(),
+                    $config->isGraceful()
+                );
             }
 
             $finder = new Finder();
@@ -52,15 +65,23 @@ class Component extends \Keboola\Component\BaseComponent
                 ->notName('*.manifest')
                 ->in($this->getDataDir() . '/in/files')->files();
             foreach ($finder as $sourceFile) {
-                throw new UserException(
-                    'File ' . $sourceFile->getPathname() . ' is not an archive.'
-                );
+                if ($config->isGraceful()) {
+                    $this->getLogger()->error('File "' . $sourceFile->getPathname() . '" is not an archive.');
+                } else {
+                    throw new UserException(
+                        'File "' . $sourceFile->getPathname() . '" is not an archive.'
+                    );
+                }
             }
 
             // GZ
             $finder = new Finder();
             $finder->name('*.gz')->in($this->getDataDir() . '/in/files')->files();
-            $gzipDecompressor = new DecompressorGzip($this->getDataDir() . '/out/files');
+            $gzipDecompressor = new DecompressorGzip(
+                $this->getDataDir() . '/out/files',
+                $this->getLogger(),
+                $config->isGraceful()
+            );
             foreach ($finder as $sourceFile) {
                 $gzipDecompressor->decompress($sourceFile);
             }
@@ -68,7 +89,11 @@ class Component extends \Keboola\Component\BaseComponent
             // ZIP
             $finder = new Finder();
             $finder->name('*.zip')->in($this->getDataDir() . '/in/files')->files();
-            $zipDecompressor = new DecompressorZip($this->getDataDir() . '/out/files');
+            $zipDecompressor = new DecompressorZip(
+                $this->getDataDir() . '/out/files',
+                $this->getLogger(),
+                $config->isGraceful()
+            );
             foreach ($finder as $sourceFile) {
                 $zipDecompressor->decompress($sourceFile);
             }
@@ -76,7 +101,11 @@ class Component extends \Keboola\Component\BaseComponent
             // Snappy
             $finder = new Finder();
             $finder->name('*.snappy')->in($this->getDataDir() . '/in/files')->files();
-            $zipDecompressor = new DecompressorSnappy($this->getDataDir() . '/out/files');
+            $zipDecompressor = new DecompressorSnappy(
+                $this->getDataDir() . '/out/files',
+                $this->getLogger(),
+                $config->isGraceful()
+            );
             foreach ($finder as $sourceFile) {
                 $zipDecompressor->decompress($sourceFile);
             }

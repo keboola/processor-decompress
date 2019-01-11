@@ -10,4 +10,9 @@ class Config extends \Keboola\Component\Config\BaseConfig
     {
         return $this->getValue(['parameters', 'compression_type']);
     }
+
+    public function isGraceful(): bool
+    {
+        return $this->getValue(['parameters', 'graceful']);
+    }
 }

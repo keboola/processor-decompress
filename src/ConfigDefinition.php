@@ -18,6 +18,9 @@ class ConfigDefinition extends \Keboola\Component\Config\BaseConfigDefinition
                     ->values(['auto', 'zip', 'gzip', 'snappy'])
                     ->defaultValue('auto')
                 ->end()
+                ->booleanNode('graceful')
+                    ->defaultValue(false)
+                ->end()
             ->end()
         ;
         // @formatter:on
