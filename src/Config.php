@@ -15,4 +15,9 @@ class Config extends \Keboola\Component\Config\BaseConfig
     {
         return $this->getValue(['parameters', 'graceful']);
     }
+
+    public function getZlibWindowSize(): int
+    {
+        return $this->getValue(['parameters', 'zlib_window_size']);
+    }
 }

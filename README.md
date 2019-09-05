@@ -4,18 +4,20 @@
 
 Takes all archive files in `/data/in/files` and decompresses them to `/data/out/files`.
 
- - Currently supports ZIP and GZIP compressions.
+ - Currently supports ZIP,GZIP and Zlib compressions.
  - Manifest files are ignored (and not copied).
 
 # Usage
 
 Compression type is detected from file suffix (`.zip`, `.gz` or `.snappy`) or can be forced by using optional `compression_type` parameter.
 
+*note: `zlib` compression can't be autodetected*
+
 ## Parameters
 
 Processor supports these optional parameters:
 
- - `compression_type` -- Specify compression type `zip`, `gzip` or `snappy`, files can have any name or suffix and are decompressed using the specified method.
+ - `compression_type` -- Specify compression type `zip`, `gzip` ,`snappy` or `zlib`, files can have any name or suffix and are decompressed using the specified method.
 
 ## Sample configurations
 
@@ -46,9 +48,9 @@ Processor supports these optional parameters:
 
 ### Graceful decompression
 
-With default setting (`"graceful": false`), when the processor encounters a file that cannot be decompressed, it will fail. In 
+With default setting (`"graceful": false`), when the processor encounters a file that cannot be decompressed, it will fail. In
 graceful mode, the failing file will be skipped and reported in events. Graceful mode is set with the `"graceful": true` parameter.
-  
+
 ```
 {
     "definition": {
@@ -60,6 +62,24 @@ graceful mode, the failing file will be skipped and reported in events. Graceful
 }
 
 ```
+
+### Zlib compression type
+
+```
+{
+    "definition": {
+        "component": "keboola.processor-decompress"
+    },
+    "parameters": {
+        "compression_type": "zlib",
+        "zlib_window_size": 15
+    }
+}
+
+```
+
+- `zlib_window_size` -- Specify [Window size logarithm](https://docs.python.org/3/library/zlib.html#zlib.decompress).
+
 
 # Decompression details
 

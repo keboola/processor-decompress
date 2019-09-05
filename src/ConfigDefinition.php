@@ -15,11 +15,14 @@ class ConfigDefinition extends \Keboola\Component\Config\BaseConfigDefinition
         $parametersNode
             ->children()
                 ->enumNode('compression_type')
-                    ->values(['auto', 'zip', 'gzip', 'snappy'])
+                    ->values(['auto', 'zip', 'gzip', 'snappy', 'zlib'])
                     ->defaultValue('auto')
                 ->end()
                 ->booleanNode('graceful')
                     ->defaultValue(false)
+                ->end()
+                ->integerNode('zlib_window_size')
+                    ->defaultValue(15)
                 ->end()
             ->end()
         ;
