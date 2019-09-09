@@ -12,9 +12,8 @@ if not os.path.isfile(sys.argv[1]):
     print("File {0} not exists".format(sys.argv[1]))
     exit(1)
 
-zlib_obj = zlib.decompressobj(int(sys.argv[2]))
-
 try:
+  zlib_obj = zlib.decompressobj(int(sys.argv[2]))
   with open(sys.argv[3], 'wb') as decompressed_file:
       with open(sys.argv[1], 'rb') as compressed_file:
           buf = compressed_file.read(CHUNKSIZE)
@@ -23,5 +22,5 @@ try:
               buf = compressed_file.read(CHUNKSIZE)
               decompressed_file.write(decompressed_data)
           decompressed_file.write(zlib_obj.flush())
-except:
-  print("Chyba při dekompresi souboru {0} not exists".format(sys.argv[1]))
+except Exception as e:
+  print("Chyba při dekompresi souboru {0}: {1}".format(sys.argv[1], str(e)))
