@@ -16,10 +16,11 @@ try:
   zlib_obj = zlib.decompressobj(int(sys.argv[2]))
   with open(sys.argv[3], 'wb') as decompressed_file:
       with open(sys.argv[1], 'rb') as compressed_file:
-          buf = compressed_file.read(CHUNKSIZE)
-          while buf:
-              decompressed_data = zlib_obj.decompress(buf)
+          while True:
               buf = compressed_file.read(CHUNKSIZE)
+              if not buf:
+                  break
+              decompressed_data = zlib_obj.decompress(buf)
               decompressed_file.write(decompressed_data)
           decompressed_file.write(zlib_obj.flush())
 except Exception as e:
