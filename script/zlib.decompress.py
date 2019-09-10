@@ -5,7 +5,7 @@ import os
 CHUNKSIZE = 1024
 
 if len(sys.argv) != 4:
-    print("Invalid arguments supplied 3 arguments expected")
+    print("Invalid arguments supplied, 3 arguments expected")
     exit(1)
 
 if not os.path.isfile(sys.argv[1]):
