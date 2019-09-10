@@ -4,7 +4,7 @@
 
 Takes all archive files in `/data/in/files` and decompresses them to `/data/out/files`.
 
- - Currently supports ZIP,GZIP and Zlib compressions.
+ - Currently supports ZIP, GZIP and Zlib compressions.
  - Manifest files are ignored (and not copied).
 
 # Usage

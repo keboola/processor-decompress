@@ -15,15 +15,22 @@
         "phpstan/phpstan-shim": "^0.10",
         "phpunit/phpunit": "^7.0",
         "squizlabs/php_codesniffer": "~3.2"
-    },  
+    },
     "autoload": {
         "psr-4": {
             "Keboola\\Processor\\Decompress\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Keboola\\Tests\\Processor\\Decompress\\": "tests/phpunit/"
+        }
+    },
     "scripts": {
-        "tests-functional": "php ./tests/run.php",
+        "tests-functional": "php ./tests/functional/run.php",
+        "tests-phpunit": "phpunit",
         "tests": [
+            "@tests-phpunit",
             "@tests-functional"
         ],
 

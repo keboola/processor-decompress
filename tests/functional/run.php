@@ -6,7 +6,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Keboola\Temp\Temp;
 
-require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 $testFolder = __DIR__;
 
