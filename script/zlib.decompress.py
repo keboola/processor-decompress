@@ -13,15 +13,16 @@ if not os.path.isfile(sys.argv[1]):
     exit(1)
 
 try:
-  zlib_obj = zlib.decompressobj(int(sys.argv[2]))
-  with open(sys.argv[3], 'wb') as decompressed_file:
-      with open(sys.argv[1], 'rb') as compressed_file:
-          while True:
-              buf = compressed_file.read(CHUNKSIZE)
-              if not buf:
-                  break
-              decompressed_data = zlib_obj.decompress(buf)
-              decompressed_file.write(decompressed_data)
-          decompressed_file.write(zlib_obj.flush())
+    zlib_obj = zlib.decompressobj(int(sys.argv[2]))
+    with open(sys.argv[3], 'wb') as decompressed_file:
+        with open(sys.argv[1], 'rb') as compressed_file:
+            while True:
+                buf = compressed_file.read(CHUNKSIZE)
+                if not buf:
+                    break
+                decompressed_data = zlib_obj.decompress(buf)
+                decompressed_file.write(decompressed_data)
+            decompressed_file.write(zlib_obj.flush())
 except Exception as e:
-  print("Chyba při dekompresi souboru {0}: {1}".format(sys.argv[1], str(e)))
+    print(str(e))
+    exit(1)
