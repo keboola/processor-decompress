@@ -17,8 +17,6 @@ class DecompressorZlibTest extends TestCase
 {
     public function testDecompressionReturnCodeDecompressionFail(): void
     {
-        $this->expectException(UserException::class);
-
         $testId = 'test-wrong-window';
         $testWrongZlibWindowValue = 9;
 
@@ -35,6 +33,8 @@ class DecompressorZlibTest extends TestCase
         $finder = new Finder();
         $files = $finder->name('test_zlib')->in(__DIR__ . '/../functional/zlib-simple/source/data/in/files')->files();
 
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage('Error -3 while decompressing data: invalid window size');
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $decompressor->decompress($file);
