@@ -6,6 +6,7 @@ namespace Keboola\Tests\Processor\Decompress;
 
 use Keboola\Component\UserException;
 use Keboola\Processor\Decompress\Decompressor\DecompressorZlib;
+use Keboola\Temp\Temp;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
@@ -14,22 +15,6 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class DecompressorZlibTest extends TestCase
 {
-    private function getTmpPath(string $testId): string
-    {
-        $tmpDir = sys_get_temp_dir();
-        $tmpDir .= "/" . $testId;
-        return $tmpDir;
-    }
-
-    public function initTmpFolder(string $testId): void
-    {
-        $fs = new Filesystem();
-        clearstatcache();
-        if (!file_exists($this->getTmpPath($testId)) && !is_dir($this->getTmpPath($testId))) {
-            $fs->mkdir($this->getTmpPath($testId), 0777);
-        }
-    }
-
     public function testDecompressionReturnCodeDecompressionFail(): void
     {
         $this->expectException(UserException::class);
@@ -37,9 +22,11 @@ class DecompressorZlibTest extends TestCase
         $testId = 'test-wrong-window';
         $testWrongZlibWindowValue = 9;
 
-        $this->initTmpFolder($testId);
+        $temp = new Temp($testId);
+        $temp->initRunFolder();
+
         $decompressor = new DecompressorZlib(
-            $this->getTmpPath($testId),
+            $temp->getTmpFolder(),
             new NullLogger(),
             false,
             $testWrongZlibWindowValue
@@ -59,9 +46,10 @@ class DecompressorZlibTest extends TestCase
         $testId = 'test-success-zlib-decompress';
         $testRightZlibWindowValue = 15;
 
-        $this->initTmpFolder($testId);
+        $temp = new Temp($testId);
+        $temp->initRunFolder();
         $decompressor = new DecompressorZlib(
-            $this->getTmpPath($testId),
+            $temp->getTmpFolder(),
             new NullLogger(),
             false,
             $testRightZlibWindowValue
@@ -75,6 +63,6 @@ class DecompressorZlibTest extends TestCase
             $decompressor->decompress($file);
         }
 
-        $this->assertFileExists($this->getTmpPath($testId) . '/test_zlib');
+        $this->assertFileExists($temp->getTmpFolder() . '/test_zlib');
     }
 }
