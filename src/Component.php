@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Keboola\Processor\Decompress;
 
+use Keboola\Component\BaseComponent;
 use Keboola\Component\UserException;
 use Keboola\Processor\Decompress\Decompressor\DecompressorGzip;
 use Keboola\Processor\Decompress\Decompressor\DecompressorSnappy;
 use Keboola\Processor\Decompress\Decompressor\DecompressorZip;
-use Keboola\Processor\Decompress\Exception\DecompressException;
+use Keboola\Processor\Decompress\Decompressor\DecompressorZlib;
 use Symfony\Component\Finder\Finder;
 
-class Component extends \Keboola\Component\BaseComponent
+class Component extends BaseComponent
 {
-
     protected function getConfigClass(): string
     {
         return Config::class;
@@ -28,27 +28,37 @@ class Component extends \Keboola\Component\BaseComponent
     {
         /** @var Config $config */
         $config = $this->getConfig();
-
         if ($config->getCompressionType() !== 'auto') {
             // force compression type
-            if ($config->getCompressionType() === 'gzip') {
-                $decompressor = new DecompressorGzip(
-                    $this->getDataDir() . '/out/files',
-                    $this->getLogger(),
-                    $config->isGraceful()
-                );
-            } elseif ($config->getCompressionType() === 'snappy') {
-                $decompressor = new DecompressorSnappy(
-                    $this->getDataDir() . '/out/files',
-                    $this->getLogger(),
-                    $config->isGraceful()
-                );
-            } else {
-                $decompressor = new DecompressorZip(
-                    $this->getDataDir() . '/out/files',
-                    $this->getLogger(),
-                    $config->isGraceful()
-                );
+            switch ($config->getCompressionType()) {
+                case 'gzip':
+                    $decompressor = new DecompressorGzip(
+                        $this->getDataDir() . '/out/files',
+                        $this->getLogger(),
+                        $config->isGraceful()
+                    );
+                    break;
+                case 'snappy':
+                    $decompressor = new DecompressorSnappy(
+                        $this->getDataDir() . '/out/files',
+                        $this->getLogger(),
+                        $config->isGraceful()
+                    );
+                    break;
+                case 'zlib':
+                    $decompressor = new DecompressorZlib(
+                        $this->getDataDir() . '/out/files',
+                        $this->getLogger(),
+                        $config->isGraceful(),
+                        $config->getZlibWindowSize()
+                    );
+                    break;
+                default:
+                    $decompressor = new DecompressorZip(
+                        $this->getDataDir() . '/out/files',
+                        $this->getLogger(),
+                        $config->isGraceful()
+                    );
             }
 
             $finder = new Finder();

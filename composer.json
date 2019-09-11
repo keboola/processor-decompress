@@ -11,20 +11,29 @@
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^1.0",
         "keboola/coding-standard": "^7.0",
+        "keboola/datadir-tests": "^3.0",
         "keboola/php-temp": "^1.0",
         "phpstan/phpstan-shim": "^0.10",
         "phpunit/phpunit": "^7.0",
         "squizlabs/php_codesniffer": "~3.2"
-    },  
+    },
     "autoload": {
         "psr-4": {
             "Keboola\\Processor\\Decompress\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Keboola\\Tests\\Processor\\Decompress\\": "tests/phpunit/",
+            "Keboola\\Tests\\Processor\\Decompress\\FunctionalTests\\": "tests/functional/"
+        }
+    },
     "scripts": {
-        "tests-functional": "php ./tests/run.php",
+        "tests-datadir": "phpunit tests/functional",
+        "tests-phpunit": "phpunit",
         "tests": [
-            "@tests-functional"
+            "@tests-phpunit",
+            "@tests-datadir"
         ],
 
         "phpstan": "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon",
