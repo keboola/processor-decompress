@@ -1,3 +1,7 @@
+# [ ⚠️ DEPRECATED ]
+
+Replaced by [processor-unzip](https://github.com/keboola/processor-unzip). **Do not trigger pipeline here!**
+
 # processor-decompress
 
 [![Build Status](https://travis-ci.org/keboola/processor-decompress.svg?branch=master)](https://travis-ci.org/keboola/processor-decompress)
